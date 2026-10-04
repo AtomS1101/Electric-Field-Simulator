@@ -20,9 +20,9 @@ class Window:
 		pygame.display.set_caption("Electric Field Simulator")
 
 	def run(self) -> None:
-		flux = Flux()
-		self._charges.append(Charge(self._screen, 500, 300))
-		self._charges.append(Charge(self._screen, 300, 300))
+		flux = Flux(self._screen)
+		self._charges.append(Charge(self._screen, 400, 400))
+		self._charges.append(Charge(self._screen, 600, 400))
 		while True:
 			self._screen.fill((45, 45, 49))
 			for event in pygame.event.get():
@@ -33,6 +33,6 @@ class Window:
 					charge.move(event)
 			for charge in self._charges:
 				charge.draw()
-			flux.draw()
+			flux.draw(self._charges[0].pos, self._charges[1].pos)
 			pygame.display.update()
 			self._clock.tick(cfg.FPS)

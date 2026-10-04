@@ -28,10 +28,9 @@ class Charge:
 			self._offsetX = self._rect.x - event.pos[0]
 			self._offsetY = self._rect.y - event.pos[1]
 		elif status == MouseState.DRAGGING:
-			self._x = event.pos[0] + self._offsetX
-			self._y = event.pos[1] + self._offsetY
-			self._rect.x = self._x
-			self._rect.y = self._y
+			self._rect.x = event.pos[0] + self._offsetX
+			self._rect.y = event.pos[1] + self._offsetY
+			self._x, self._y = self._rect.center
 
 	def draw(self) -> None:
 		isDragging = self._mouse.isHolding()
