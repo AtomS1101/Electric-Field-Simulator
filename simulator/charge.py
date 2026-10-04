@@ -7,9 +7,9 @@ from .mouse import Mouse, MouseState
 class Charge:
 	def __init__(self, screen: pygame.Surface, x: int, y: int):
 		self._screen: pygame.Surface = screen
+		self._q: int = 1
 		self._x: int = x
 		self._y: int = y
-		self._q: int = -1
 		self._offsetX: int = 0
 		self._offsetY: int = 0
 		self._mouse: Mouse = Mouse()
@@ -30,6 +30,11 @@ class Charge:
 		elif status == MouseState.DRAGGING:
 			self._rect.x = event.pos[0] + self._offsetX
 			self._rect.y = event.pos[1] + self._offsetY
+			self._x, self._y = self._rect.center
+			if abs(self._x - cfg.WIDTH / 2) < cfg.SNAP:
+				self._rect.x = int(cfg.WIDTH / 2 - cfg.CHARGE_SIZE / 2)
+			if abs(self._y - cfg.HEIGHT / 2) < cfg.SNAP:
+				self._rect.y = int(cfg.HEIGHT / 2 - cfg.CHARGE_SIZE / 2)
 			self._x, self._y = self._rect.center
 
 	def draw(self) -> None:

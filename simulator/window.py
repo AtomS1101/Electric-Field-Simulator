@@ -21,8 +21,8 @@ class Window:
 
 	def run(self) -> None:
 		flux = Flux(self._screen)
-		self._charges.append(Charge(self._screen, 400, 400))
-		self._charges.append(Charge(self._screen, 600, 400))
+		self._charges.append(Charge(self._screen, 400, 350))
+		self._charges.append(Charge(self._screen, 600, 350))
 		while True:
 			self._screen.fill((45, 45, 49))
 			for event in pygame.event.get():

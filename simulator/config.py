@@ -2,6 +2,7 @@
 WIDTH   = 1000
 HEIGHT  = 700
 FPS     = 30
+SNAP    = 10
 
 # Charges
 CHARGE_SIZE             = 20
