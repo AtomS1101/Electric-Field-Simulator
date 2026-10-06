@@ -21,18 +21,21 @@ class Window:
 
 	def run(self) -> None:
 		flux = Flux(self._screen)
-		self._charges.append(Charge(self._screen, 400, 350))
-		self._charges.append(Charge(self._screen, 600, 350))
+		self._charges.append(Charge(self._screen,  50,  0,  3))
+		self._charges.append(Charge(self._screen, -50,  0, -3))
+		self._charges.append(Charge(self._screen,   0, 30, -2))
+		self._charges.append(Charge(self._screen,  -50, 30,-4))
+		self._charges.append(Charge(self._screen,   50, 40, 3))
 		while True:
-			self._screen.fill((45, 45, 49))
+			self._screen.fill(cfg.BACKGROUND)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					return
 				for charge in self._charges:
 					charge.move(event)
+			flux.draw(self._charges)
 			for charge in self._charges:
 				charge.draw()
-			flux.draw(self._charges[0].pos, self._charges[1].pos)
 			pygame.display.update()
 			self._clock.tick(cfg.FPS)

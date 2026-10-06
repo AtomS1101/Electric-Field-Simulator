@@ -1,26 +1,33 @@
 import pygame
 
 from . import config as cfg
+from .coordinate import crdToWin, winToCrd
 from .mouse import Mouse, MouseState
 
 
 class Charge:
-	def __init__(self, screen: pygame.Surface, x: int, y: int):
+	def __init__(self, screen: pygame.Surface, x: int, y: int, q: int):
 		self._screen: pygame.Surface = screen
-		self._q: int = 1
+		self._q: int = q
 		self._x: int = x
 		self._y: int = y
 		self._offsetX: int = 0
 		self._offsetY: int = 0
 		self._mouse: Mouse = Mouse()
+		start = crdToWin(self._x, self._y)
 		self._rect = pygame.Rect(
-			self._x - cfg.CHARGE_SIZE / 2, self._y - cfg.CHARGE_SIZE / 2,
+			start[0] - cfg.CHARGE_SIZE / 2, start[1] - cfg.CHARGE_SIZE / 2,
 			cfg.CHARGE_SIZE, cfg.CHARGE_SIZE
 		)
 
 	@property
 	def pos(self) -> tuple[int, int]:
+		self._x, self._y = winToCrd(*self._rect.center)
 		return self._x, self._y
+
+	@property
+	def q(self) -> int:
+		return self._q
 
 	def move(self, event: pygame.event.Event) -> None:
 		status = self._mouse.getState(self._rect.center, cfg.CHARGE_SIZE, event)
@@ -30,12 +37,10 @@ class Charge:
 		elif status == MouseState.DRAGGING:
 			self._rect.x = event.pos[0] + self._offsetX
 			self._rect.y = event.pos[1] + self._offsetY
-			self._x, self._y = self._rect.center
-			if abs(self._x - cfg.WIDTH / 2) < cfg.SNAP:
+			if abs(self.pos[0]) < cfg.SNAP:
 				self._rect.x = int(cfg.WIDTH / 2 - cfg.CHARGE_SIZE / 2)
-			if abs(self._y - cfg.HEIGHT / 2) < cfg.SNAP:
+			if abs(self.pos[1]) < cfg.SNAP:
 				self._rect.y = int(cfg.HEIGHT / 2 - cfg.CHARGE_SIZE / 2)
-			self._x, self._y = self._rect.center
 
 	def draw(self) -> None:
 		isDragging = self._mouse.isHolding()
