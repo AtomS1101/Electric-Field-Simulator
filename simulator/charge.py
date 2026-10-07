@@ -46,5 +46,11 @@ class Charge:
 		isDragging = self._mouse.isHolding()
 		positiveColor = cfg.POSITIVE_COLOR_CLICKED if isDragging else cfg.POSITIVE_COLOR
 		negativeColor = cfg.NEGATIVE_COLOR_CLICKED if isDragging else cfg.NEGATIVE_COLOR
-		color = positiveColor if self._q > 0 else negativeColor
+		color = positiveColor if self._q > 0 else negativeColor if self._q < 0 else (0, 0, 0)
 		pygame.draw.circle(self._screen, color, self._rect.center, cfg.CHARGE_SIZE / 2)
+		textBackground = crdToWin(self._x + cfg.TEXT_OFFSET[0], self._y + cfg.TEXT_OFFSET[1])
+		textRect = pygame.Rect(textBackground[0] - 1, textBackground[1] - 1, 40, 23)
+		pygame.draw.rect(self._screen, cfg.BACKGROUND, textRect)
+		font = pygame.font.SysFont("Times New Roman", 15)
+		text = font.render(f"{self._q} [C]", False, cfg.FONT_COLOR)
+		self._screen.blit(text, textBackground)
