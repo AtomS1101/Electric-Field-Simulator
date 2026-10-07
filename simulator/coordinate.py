@@ -22,5 +22,5 @@ def stillInScreen(x: float, y: float) -> bool:
 
 def setOffset(x: int, y: int) -> None:
 	global offsetX, offsetY
-	offsetX += x
-	offsetY += y
+	offsetX += x * cfg.SCROLL_SPEED
+	offsetY += y * cfg.SCROLL_SPEED

@@ -1,8 +1,9 @@
 # Window
-WIDTH      = 1000
-HEIGHT     = 700
-FPS        = 30
-BACKGROUND = (45, 45, 49)
+WIDTH        = 1000
+HEIGHT       = 700
+FPS          = 30
+BACKGROUND   = (45, 45, 49)
+SCROLL_SPEED = 3
 
 # Simulation Field
 # You can't change y area because the window size ratio is fixed
@@ -24,7 +25,7 @@ TEXT_OFFSET             = (2, 1)
 # Flux
 FLUX_WIDTH  = 1
 FLUX_COLOR  = (80, 100, 0)
-DENSITY     = 10
+DENSITY     = 20
 MAX_STEPS   = 500
 
 # Physical constant
