@@ -6,9 +6,11 @@ BACKGROUND = (45, 45, 49)
 
 # Simulation Field
 # You can't change y area because the window size ratio is fixed
-X_MIN = -100
-X_MAX = 100
-SNAP  = 3
+X_MIN      = -100
+X_MAX      = 100
+SNAP       = 3
+AXIS_COLOR = (30, 30, 30)
+AXIS_WIDTH = 1
 
 # Charges
 CHARGE_SIZE             = 18

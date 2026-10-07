@@ -2,7 +2,9 @@ import pygame
 
 from . import config as cfg
 from .charge import Charge
+from .coordinate import crdToWin, setOffset
 from .flux import Flux
+from .mouse import Mouse
 
 
 class Window:
@@ -12,6 +14,7 @@ class Window:
 		self._screen: pygame.Surface
 		self._clock: pygame.time.Clock
 		self._charges: list[Charge] = []
+		self._mouse: Mouse = Mouse()
 
 	def setup(self) -> None:
 		pygame.init()
@@ -34,6 +37,9 @@ class Window:
 					return
 				for charge in self._charges:
 					charge.move(event)
+					setOffset(*self._mouse.getScroll(event)) # Update every frame
+			pygame.draw.line(self._screen, cfg.AXIS_COLOR, crdToWin(-500, 0), crdToWin(500, 0), width=cfg.AXIS_WIDTH) #　X Axis
+			pygame.draw.line(self._screen, cfg.AXIS_COLOR, crdToWin(0, -500), crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
 			flux.draw(self._charges)
 			for charge in self._charges:
 				charge.draw()

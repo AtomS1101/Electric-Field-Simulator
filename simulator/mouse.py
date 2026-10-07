@@ -11,10 +11,10 @@ class MouseState(Enum):
 
 class Mouse:
 	def __init__(self):
-		self._event : pygame.event.Event
-		self._center : tuple[int, int]
-		self._radius : int
-		self._isHolding = False
+		self._event: pygame.event.Event
+		self._center: tuple[int, int]
+		self._radius: int
+		self._isHolding: bool = False
 
 	def _isClicked(self) -> bool:
 		if self._event.type == pygame.MOUSEBUTTONDOWN and self._event.button == 1:
@@ -33,6 +33,11 @@ class Mouse:
 
 	def _isDragging(self) -> bool:
 		return self._event.type == pygame.MOUSEMOTION and self._isHolding
+
+	def getScroll(self, event) -> tuple[int, int]:
+		if event.type == pygame.MOUSEWHEEL:
+			return event.x, event.y
+		return 0, 0
 
 	def isHolding(self) -> bool:
 		return self._isHolding

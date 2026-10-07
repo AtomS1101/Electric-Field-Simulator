@@ -16,13 +16,12 @@ class Charge:
 		self._mouse: Mouse = Mouse()
 		start = crdToWin(self._x, self._y)
 		self._rect = pygame.Rect(
-			start[0] - cfg.CHARGE_SIZE / 2, start[1] - cfg.CHARGE_SIZE / 2,
-			cfg.CHARGE_SIZE, cfg.CHARGE_SIZE
+			start[0] - cfg.CHARGE_SIZE / 2,	start[1] - cfg.CHARGE_SIZE / 2,
+			cfg.CHARGE_SIZE, cfg.CHARGE_SIZE,
 		)
 
 	@property
 	def pos(self) -> tuple[int, int]:
-		self._x, self._y = winToCrd(*self._rect.center)
 		return self._x, self._y
 
 	@property
@@ -32,22 +31,25 @@ class Charge:
 	def move(self, event: pygame.event.Event) -> None:
 		status = self._mouse.getState(self._rect.center, cfg.CHARGE_SIZE, event)
 		if status == MouseState.CLICKED:
-			self._offsetX = self._rect.x - event.pos[0]
-			self._offsetY = self._rect.y - event.pos[1]
+			eventPos = winToCrd(*event.pos)
+			self._offsetX = self._x - eventPos[0]
+			self._offsetY = self._y - eventPos[1]
 		elif status == MouseState.DRAGGING:
-			self._rect.x = event.pos[0] + self._offsetX
-			self._rect.y = event.pos[1] + self._offsetY
-			if abs(self.pos[0]) < cfg.SNAP:
-				self._rect.x = int(cfg.WIDTH / 2 - cfg.CHARGE_SIZE / 2)
-			if abs(self.pos[1]) < cfg.SNAP:
-				self._rect.y = int(cfg.HEIGHT / 2 - cfg.CHARGE_SIZE / 2)
+			eventPos = winToCrd(*event.pos)
+			self._x = eventPos[0] + self._offsetX
+			self._y = eventPos[1] + self._offsetY
+			if abs(self._x) < cfg.SNAP:	self._x = 0
+			if abs(self._y) < cfg.SNAP:	self._y = 0
 
 	def draw(self) -> None:
+		self._rect.x, self._rect.y = crdToWin(self._x, self._y)
+		self._rect.x -= int(cfg.CHARGE_SIZE / 2)
+		self._rect.y -= int(cfg.CHARGE_SIZE / 2)
 		isDragging = self._mouse.isHolding()
 		positiveColor = cfg.POSITIVE_COLOR_CLICKED if isDragging else cfg.POSITIVE_COLOR
 		negativeColor = cfg.NEGATIVE_COLOR_CLICKED if isDragging else cfg.NEGATIVE_COLOR
 		color = positiveColor if self._q > 0 else negativeColor if self._q < 0 else (0, 0, 0)
-		pygame.draw.circle(self._screen, color, self._rect.center, cfg.CHARGE_SIZE / 2)
+		pygame.draw.circle(self._screen, color, self._rect.center, cfg.CHARGE_SIZE / 2) # Draw charge
 		textBackground = crdToWin(self._x + cfg.TEXT_OFFSET[0], self._y + cfg.TEXT_OFFSET[1])
 		textRect = pygame.Rect(textBackground[0] - 1, textBackground[1] - 1, 40, 23)
 		pygame.draw.rect(self._screen, cfg.BACKGROUND, textRect)
