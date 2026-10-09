@@ -12,14 +12,17 @@ class Flux:
 		self._screen: pygame.Surface = screen
 		self._viewport: Viewport = viewport
 
-	def _getElectricField(self, pos, charges: list[Charge]) -> tuple[float, float]:
+	def _getElectricField(self, pos: tuple[float, float], charges: list[Charge]) -> tuple[float, float]:
 		Ex = Ey = 0
 		for charge in charges:
-			dx, dy = pos[0] - charge.pos[0], pos[1] - charge.pos[1]
-			if dx == 0 and dy == 0:	return 0, 0
-			R3 = (dx**2 + dy**2) ** 1.5
-			Ex += cfg.K * charge.q * dx / R3
-			Ey += cfg.K * charge.q * dy / R3
+			dx = pos[0] - charge.pos[0]
+			dy = pos[1] - charge.pos[1]
+			if dx == 0 and dy == 0:	return (0, 0)
+			R3 = (dx**2 + dy**2) ** (3/2)
+			Ex += charge.q * dx / R3
+			Ey += charge.q * dy / R3
+		Ex *= cfg.K
+		Ey *= cfg.K
 		magnitude = (Ex ** 2 + Ey ** 2) ** 0.5
 		angle = math.atan2(Ey, Ex)
 		return magnitude, angle

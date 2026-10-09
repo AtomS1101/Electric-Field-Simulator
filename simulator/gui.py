@@ -28,8 +28,7 @@ class Gui:
 			self._isHovering = False
 		return False
 
-
-	def showAddBtn(self):
+	def showAddBtn(self) -> None:
 		plusMargin = 7
 		shadowPos = 4 if self._isHovering else 2
 		color = (10, 10, 70) if self._clicked else (30, 30, 90)

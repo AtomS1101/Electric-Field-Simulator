@@ -25,11 +25,11 @@ class Window:
 		self._clock = pygame.time.Clock()
 		pygame.display.set_caption("Electric Field Simulator")
 
-	def _drawAxis(self):
+	def _drawAxis(self) -> None:
 		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(-500, 0), self._viewport.crdToWin(500, 0), width=cfg.AXIS_WIDTH) #　X Axis
 		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(0, -500), self._viewport.crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
 
-	def _addCharge(self):
+	def _addCharge(self) -> None:
 		self._charges.append(Charge(self._screen, self._viewport, self._lastChargePos, -self._lastChargePos))
 		self._lastChargePos += 10
 

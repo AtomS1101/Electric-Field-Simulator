@@ -32,7 +32,7 @@ class Charge:
 	def q(self) -> float:
 		return self._q
 
-	def _inputHandle(self, event):
+	def _inputHandle(self, event) -> None:
 		if event.type == pygame.KEYDOWN and self._inputActive:
 			if event.key == pygame.K_RETURN:
 				try:
