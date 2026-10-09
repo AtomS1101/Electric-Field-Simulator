@@ -2,9 +2,10 @@ import pygame
 
 from . import config as cfg
 from .charge import Charge
-from .coordinate import crdToWin, setOffset
 from .flux import Flux
+from .gui import Gui
 from .mouse import Mouse
+from .viewport import Viewport
 
 
 class Window:
@@ -15,6 +16,8 @@ class Window:
 		self._clock: pygame.time.Clock
 		self._charges: list[Charge] = []
 		self._mouse: Mouse = Mouse()
+		self._viewport: Viewport = Viewport()
+		self._lastChargePos: int = 0
 
 	def setup(self) -> None:
 		pygame.init()
@@ -22,13 +25,18 @@ class Window:
 		self._clock = pygame.time.Clock()
 		pygame.display.set_caption("Electric Field Simulator")
 
+	def _drawAxis(self):
+		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(-500, 0), self._viewport.crdToWin(500, 0), width=cfg.AXIS_WIDTH) #　X Axis
+		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(0, -500), self._viewport.crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
+
+	def _addCharge(self):
+		self._charges.append(Charge(self._screen, self._viewport, self._lastChargePos, -self._lastChargePos, 1))
+		self._lastChargePos += 10
+
 	def run(self) -> None:
-		flux = Flux(self._screen)
-		self._charges.append(Charge(self._screen,  50,  0, 1))
-		# self._charges.append(Charge(self._screen, -50,  0, -1))
-		self._charges.append(Charge(self._screen,   0, 30, -3))
-		# self._charges.append(Charge(self._screen,  -50, 30,-4))
-		# self._charges.append(Charge(self._screen,   50, 40, 3))
+		gui = Gui(self._screen)
+		flux = Flux(self._screen, self._viewport)
+		self._addCharge()
 		while True:
 			self._screen.fill(cfg.BACKGROUND)
 			for event in pygame.event.get():
@@ -37,11 +45,13 @@ class Window:
 					return
 				for charge in self._charges:
 					charge.move(event)
-					setOffset(*self._mouse.getScroll(event)) # Update every frame
-			pygame.draw.line(self._screen, cfg.AXIS_COLOR, crdToWin(-500, 0), crdToWin(500, 0), width=cfg.AXIS_WIDTH) #　X Axis
-			pygame.draw.line(self._screen, cfg.AXIS_COLOR, crdToWin(0, -500), crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
+					if gui.listen(event):
+						self._addCharge()
+					self._viewport.scroll(*self._mouse.getScroll(event)) # Update every fram
 			flux.draw(self._charges)
+			self._drawAxis()
 			for charge in self._charges:
 				charge.draw()
+			gui.showAddBtn()
 			pygame.display.update()
 			self._clock.tick(cfg.FPS)
