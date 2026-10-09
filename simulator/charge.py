@@ -6,38 +6,37 @@ from .viewport import Viewport
 
 
 class Charge:
-	def __init__(self, screen: pygame.Surface, viewport: Viewport, x: int, y: int, q: int):
+	def __init__(self, screen: pygame.Surface, viewport: Viewport, x: int, y: int):
 		self._screen: pygame.Surface = screen
 		self._viewport: Viewport = viewport
-		self._q: int = q
+		self._mouse: Mouse = Mouse()
+		self._q: float = 1.0
 		self._x: int = x
 		self._y: int = y
 		self._offsetX: float = 0
 		self._offsetY: float = 0
-		self._mouse: Mouse = Mouse()
+		self._textRect: pygame.Rect
+		self._inputActive: bool = False
+		self._input: str = ""
 		start = self._viewport.crdToWin(self._x, self._y)
 		self._rect: pygame.Rect = pygame.Rect(
 			start[0] - cfg.CHARGE_SIZE / 2,	start[1] - cfg.CHARGE_SIZE / 2,
 			cfg.CHARGE_SIZE, cfg.CHARGE_SIZE,
 		)
-		self._textPos: tuple[int, int]
-		self._textRect: pygame.Rect
-		self._inputActive: bool = False
-		self._input: str = ""
 
 	@property
 	def pos(self) -> tuple[int, int]:
 		return self._x, self._y
 
 	@property
-	def q(self) -> int:
+	def q(self) -> float:
 		return self._q
 
 	def _inputHandle(self, event):
 		if event.type == pygame.KEYDOWN and self._inputActive:
 			if event.key == pygame.K_RETURN:
 				try:
-					self._q = int(self._input)
+					self._q = float(self._input)
 				except ValueError:
 					print("Error: invalid input")
 				finally:
@@ -45,6 +44,9 @@ class Charge:
 					self._inputActive = False
 			elif event.key == pygame.K_BACKSPACE:
 				self._input = self._input[:-1]
+			elif event.key == pygame.K_ESCAPE:
+				self._input = ""
+				self._inputActive = False
 			else:
 				self._input += event.unicode
 
@@ -76,11 +78,15 @@ class Charge:
 		negativeColor = cfg.NEGATIVE_COLOR_CLICKED if isDragging else cfg.NEGATIVE_COLOR
 		color = positiveColor if self._q > 0 else negativeColor if self._q < 0 else (0, 0, 0)
 		pygame.draw.circle(self._screen, color, self._rect.center, cfg.CHARGE_SIZE / 2) # Draw charge
-		self._textPos = self._viewport.crdToWin(self._x + cfg.TEXT_OFFSET[0], self._y + cfg.TEXT_OFFSET[1])
-		self._textRect = pygame.Rect(self._textPos[0] - 1, self._textPos[1] - 1, 40, 23)
+		if self._inputActive:
+			textBoxWidth = 40 if len(self._input) <= 4 else len(self._input)*9 # One character width is 9
+		else:
+			textBoxWidth = 40 if len(str(self._q)) <= 4 else (len(str(self._q))+3)*9
+		textPos = self._viewport.crdToWin(self._x + cfg.TEXT_OFFSET[0], self._y + cfg.TEXT_OFFSET[1])
+		self._textRect = pygame.Rect(textPos[0] - 1, textPos[1] - 1, textBoxWidth, 23)
 		pygame.draw.rect(self._screen, cfg.BACKGROUND, self._textRect) # Text Background
-		if self._inputActive: pygame.draw.rect(self._screen, (255, 255, 255), self._textRect, width=1)
+		if self._inputActive: pygame.draw.rect(self._screen, cfg.TEXTBOX_COLOR, self._textRect, width=1) # Text Box
 		font = pygame.font.SysFont("Times New Roman", 15)
 		content = self._input if self._inputActive else f"{self._q} [C]"
 		text = font.render(content, False, cfg.FONT_COLOR)
-		self._screen.blit(text, self._textPos)
+		self._screen.blit(text, textPos)

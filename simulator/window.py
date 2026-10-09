@@ -30,7 +30,7 @@ class Window:
 		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(0, -500), self._viewport.crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
 
 	def _addCharge(self):
-		self._charges.append(Charge(self._screen, self._viewport, self._lastChargePos, -self._lastChargePos, 1))
+		self._charges.append(Charge(self._screen, self._viewport, self._lastChargePos, -self._lastChargePos))
 		self._lastChargePos += 10
 
 	def run(self) -> None:
