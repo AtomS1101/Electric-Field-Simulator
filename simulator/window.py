@@ -48,8 +48,8 @@ class Window:
 					if gui.listen(event):
 						self._addCharge()
 					self._viewport.scroll(*self._mouse.getScroll(event)) # Update every fram
-			flux.draw(self._charges)
 			self._drawAxis()
+			flux.draw(self._charges)
 			for charge in self._charges:
 				charge.draw()
 			gui.showAddBtn()

@@ -9,15 +9,15 @@ class Viewport:
 		self._offsetX = 0
 		self._offsetY = 0
 
-	def crdToWin(self, x: float, y: float) -> tuple[float, float]:
+	def crdToWin(self, x: float, y: float) -> tuple[int, int]:
 		windowCrdX = cfg.WIDTH / (cfg.X_MAX - cfg.X_MIN) * x + cfg.WIDTH / (cfg.X_MAX - cfg.X_MIN) * abs(cfg.X_MIN) - self._offsetX
 		windowCrdY = -(cfg.HEIGHT / Y_LIMIT) * y + (cfg.HEIGHT / 2) + self._offsetY
-		return (windowCrdX, windowCrdY)
+		return (int(windowCrdX), int(windowCrdY))
 
-	def winToCrd(self, x: int, y: int) -> tuple[int, int]:
+	def winToCrd(self, x: float, y: float) -> tuple[float, float]:
 		crdX = (cfg.X_MAX - cfg.X_MIN) / cfg.WIDTH * (x + self._offsetX) + cfg.X_MIN
 		crdY = -(Y_LIMIT / cfg.HEIGHT) * (y - self._offsetY) + (Y_LIMIT / 2)
-		return (int(crdX), int(crdY))
+		return (crdX, crdY)
 
 	def stillInScreen(self, x: float, y: float) -> bool:
 		x, y = self.crdToWin(x, y)
