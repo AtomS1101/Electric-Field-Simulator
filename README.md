@@ -40,9 +40,10 @@ chmod +x simulate
 
 ## How to use?
 1. Tap the "+" button to add a new charge.
-2. Click the text box to change the charge power.
+2. Click the text box and enter the number to modify the charge.
 3. Drag and drop to move each charge.
-4. Scroll the window to rearrange the layout.
+4. You can scroll to view the hidden areas.
+5. You can remove the charge by entering `0`.
 
 <img width="220" height="220" alt="Image" src="https://github.com/user-attachments/assets/cb3a7bd7-df0d-487d-9073-af8facecd75c" />
 
