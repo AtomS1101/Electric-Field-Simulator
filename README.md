@@ -37,3 +37,14 @@ chmod +x simulate
 ```sh
 ./simulate
 ```
+
+## How to use?
+1. Tap the "+" button to add a new charge.
+2. Click the text box to change the charge power.
+3. Drag and drop to move each charge.
+4. Scroll the window to rearrange the layout.
+
+<img width="220" height="220" alt="Image" src="https://github.com/user-attachments/assets/cb3a7bd7-df0d-487d-9073-af8facecd75c" />
+
+## License
+MIT
