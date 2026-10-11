@@ -30,6 +30,7 @@ class Window:
 		pygame.draw.line(self._screen, cfg.AXIS_COLOR, self._viewport.crdToWin(0, -500), self._viewport.crdToWin(0, 500), width=cfg.AXIS_WIDTH) #　Y Axis
 
 	def _addCharge(self) -> None:
+		if not self._charges: self._lastChargePos = 0 # Reset position
 		self._charges.append(Charge(self._screen, self._viewport, self._lastChargePos, -self._lastChargePos))
 		self._lastChargePos += 10
 
@@ -45,12 +46,14 @@ class Window:
 					return
 				for charge in self._charges:
 					charge.move(event)
-					if gui.listen(event):
-						self._addCharge()
-					self._viewport.scroll(*self._mouse.getScroll(event)) # Update every fram
+				if gui.listen(event): self._addCharge()
+				self._viewport.scroll(*self._mouse.getScroll(event))
 			self._drawAxis()
-			flux.draw(self._charges)
+			if self._charges: flux.draw(self._charges)
 			for charge in self._charges:
+				if charge.q == 0:
+					self._charges.remove(charge)
+					continue
 				charge.draw()
 			gui.showAddBtn()
 			pygame.display.update()

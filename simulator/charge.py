@@ -15,7 +15,7 @@ class Charge:
 		self._y: int = y
 		self._offsetX: float = 0
 		self._offsetY: float = 0
-		self._textRect: pygame.Rect
+		self._textRect: pygame.Rect = pygame.Rect(0, 0, 0, 0) # Needs a default value to prevent crashes from spamming the Add button
 		self._inputActive: bool = False
 		self._input: str = ""
 		start = self._viewport.crdToWin(self._x, self._y)
@@ -79,14 +79,14 @@ class Charge:
 		color = positiveColor if self._q > 0 else negativeColor if self._q < 0 else (0, 0, 0)
 		pygame.draw.circle(self._screen, color, self._rect.center, cfg.CHARGE_SIZE / 2) # Draw charge
 		if self._inputActive:
-			textBoxWidth = 40 if len(self._input) <= 4 else len(self._input)*9 # One character width is 9
+			textBoxWidth = 40 if len(self._input) <= 4 else (len(self._input) * 9) # One character width is 9
 		else:
-			textBoxWidth = 40 if len(str(self._q)) <= 4 else (len(str(self._q))+3)*9
+			textBoxWidth = len(f"{self._q} [C]") * 7
 		textPos = self._viewport.crdToWin(self._x + cfg.TEXT_OFFSET[0], self._y + cfg.TEXT_OFFSET[1])
 		self._textRect = pygame.Rect(textPos[0] - 1, textPos[1] - 1, textBoxWidth, 23)
 		pygame.draw.rect(self._screen, cfg.BACKGROUND, self._textRect) # Text Background
 		if self._inputActive: pygame.draw.rect(self._screen, cfg.TEXTBOX_COLOR, self._textRect, width=1) # Text Box
-		font = pygame.font.SysFont("Times New Roman", 15)
-		content = self._input if self._inputActive else f"{self._q} [C]"
+		font = pygame.font.SysFont(cfg.FONT, 15)
+		content = f"{self._input}|" if self._inputActive else f"{self._q} [C]"
 		text = font.render(content, False, cfg.FONT_COLOR)
 		self._screen.blit(text, textPos)
