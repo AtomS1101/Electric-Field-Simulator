@@ -4,6 +4,7 @@ HEIGHT       = 700
 FPS          = 60
 BACKGROUND   = (45, 45, 49)
 SCROLL_SPEED = 3
+FONT         = "Times New Roman"
 
 # Simulation Field
 # You can't change y area because the window size ratio is fixed
@@ -12,7 +13,6 @@ X_MAX      = 100
 SNAP       = 3
 AXIS_COLOR = (150, 150, 150)
 AXIS_WIDTH = 2
-
 
 # Charges
 CHARGE_SIZE             = 18
